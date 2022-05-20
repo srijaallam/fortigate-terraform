@@ -1,0 +1,15 @@
+module "module_azurerm_marketplace_agreement" {
+  for_each = local.marketplace_agreement
+
+  source = "../azure/rm/azurerm_marketplace_agreement"
+
+  publishername       = each.value.publishername
+  offer               = each.value.offer
+
+  plan              = each.value.plan
+  
+}
+
+output "marketplace_agreement" {
+  value = var.enable_module_output ? module.module_azurerm_marketplace_agreement[*] : null
+}
