@@ -1,6 +1,6 @@
 resource "aws_key_pair" "public_key" {
-  key_name   = "sallam_public"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDZUK/9XllDr9SO1oAf40GXS6m6rKJ+4g4vFR9Ee0EgNlcBNEaowvFU7emMwTpVvB48YDafJ0b3+aaEmcbIa6qX+ypLiu/oJ5HgbhSMHUu3IfZlUlXZmratcAaB+HIxE+1/ASRUlEXlVAZPX93p+CbHrud/8EmYD6T62tQodX5AFnuV0zHxfxKeKTv4mXAfpZWO6nHfZlZ6QrrecCotbzCSjkkLEx+HuUMuYx5XfD341ikQ5zz6vJhe2oY2MASrLf6l7FeH0CrgBjUOFNr8G/psdoBSToNQTVmyjmppmYbE3OkMcPNcTtYCNgFEpW3rfyDx8dVcBAeqRG6R0Kfo+1XapBiK5QE+oaqcVkBgOD18m2f9rx+O5slgxA6KhAFdMhypMVOvjQzYOF2ivdXAVGgZtjV+eDozVgT+KcYs/oTq+fGyQoj3Rd5+MdJjFagVdgsY/t+h7T7oSflpHgTcl1J+VszXvkjVhnLshv4meuk2CEeO9upzqKpYyaErDubUHs9o7u6eHXyW8J4ypWvjLn0asfo+pwp85fn7MP7yXGk9B+McIzf9Yh085c6TrdbV5twrm7Rm61UDG7Nn1Yy0lqVd2wGO7Xqi7DOgfty+Av7P8gL/vODJ4tshOUCsjGNiHuELUlwhC/6h5S1VKqG0wwfRWinXfT+YCD2p1AfNDqvHsQ== sallam@sallam-mac"
+  key_name   = "public"
+  public_key = ""
 }
 
 data "template_file" "user_data" {
@@ -51,7 +51,7 @@ resource "aws_security_group" "kali_security_group" {
 }
 
 resource "aws_instance" "kali_linux" {
-  ami                         = "ami-0f225368873bb2dd1"
+  ami                         = "ami-xxxx"
   instance_type               = var.instance_type
   availability_zone           = var.availability_zone
   associate_public_ip_address = true
@@ -71,8 +71,8 @@ resource "aws_instance" "kali_linux" {
 
 
 resource "aws_route53_record" "cloudteam" {
-  zone_id = "Z07964723PNNJ5KCLHM20"
-  name    = "attacker3.cloudteamapp.com"
+  zone_id = "zoneid"
+  name    = "attackerx.example.com"
   type    = "A"
   ttl     = "300"
   records = [aws_instance.kali_linux.public_ip]
