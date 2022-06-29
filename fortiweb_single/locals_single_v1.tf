@@ -23,14 +23,6 @@ locals {
       allocation_method = "Static"
       sku               = "Standard"
     }
-    "pip_kalilinux" = {
-      resource_group_name = module.module_azurerm_resource_group[var.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[var.resource_group_name].resource_group.location
-
-      name              = "pip_kalilinux"
-      allocation_method = "Static"
-      sku               = "Standard"
-    }
   }
     random_ids = {
     "storage_account_random_id" = {
@@ -121,23 +113,6 @@ locals {
           private_ip_address_allocation = "Static"
           private_ip_address            = cidrhost(module.module_azurerm_subnet["protected"].subnet.address_prefixes[0], 4)
           public_ip_address_id          = module.module_azurerm_public_ip["pip_linuxvm"].public_ip.id
-        }
-      ]
-    }
-    "nic_kalivm_1_1" = {
-      resource_group_name = module.module_azurerm_resource_group[var.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[var.resource_group_name].resource_group.location
-
-      name                          = "nic_kalivm_1_1"
-      enable_ip_forwarding          = true
-      enable_accelerated_networking = true
-      ip_configurations = [
-        {
-          name                          = "ipconfig1"
-          subnet_id                     = module.module_azurerm_subnet["external"].subnet.id
-          private_ip_address_allocation = "Static"
-          private_ip_address            = cidrhost(module.module_azurerm_subnet["external"].subnet.address_prefixes[0], 10)
-          public_ip_address_id          = module.module_azurerm_public_ip["pip_kalilinux"].public_ip.id
         }
       ]
     }
@@ -394,58 +369,6 @@ locals {
       storage_data_disks = [
         {
           name              = "disk_data_application"
-          managed_disk_type = "Premium_LRS"
-          create_option     = "Empty"
-          disk_size_gb      = "30"
-          lun               = "0"
-        }
-      ]
-      
-      boot_diagnostics_enabled     = true
-      boot_diagnostics_storage_uri = module.module_azurerm_storage_account["stdiag"].storage_account.primary_blob_endpoint
-    }
-    "vm_kali_linux" = {
-      resource_group_name = module.module_azurerm_resource_group[var.resource_group_name].resource_group.name
-      location            = module.module_azurerm_resource_group[var.resource_group_name].resource_group.location
-
-      name              = "kalilinux"
-      identity_identity = "SystemAssigned"
-
-      availability_set_id = null
-      zones               = null
-
-      delete_os_disk_on_termination    = true
-      delete_data_disks_on_termination = true
-
-      network_interface_ids        = [for nic in ["nic_kalivm_1_1"] : module.module_azurerm_network_interface[nic].network_interface.id]
-      primary_network_interface_id = module.module_azurerm_network_interface["nic_kalivm_1_1"].network_interface.id
-
-      public_ip_address        = null
-      vm_size                  = "Standard_DS1_v2"
-
-      storage_os_disk_name              = "disk_os_kalivm"
-      storage_os_disk_caching           = "ReadWrite"
-      storage_os_disk_managed_disk_type = "Premium_LRS"
-
-      storage_image_reference_publisher = "techlatest"
-      storage_image_reference_offer     = "desktop-linux-kali"
-      storage_image_reference_sku       = "desktop-linux-kali"
-      storage_image_reference_version   = "latest"
-      storage_os_disk_create_option     = "FromImage"
-
-      plan_name      = "desktop-linux-kali"
-      plan_publisher = "techlatest" 
-      plan_product   = "desktop-linux-kali"
-
-       
-      os_profile_admin_username   = "azureuser"
-      os_profile_admin_password    = "Password1!"
-      os_profile_linux_config_disable_password_authentication = false
-
-
-      storage_data_disks = [
-        {
-          name              = "disk_data_kali"
           managed_disk_type = "Premium_LRS"
           create_option     = "Empty"
           disk_size_gb      = "30"
